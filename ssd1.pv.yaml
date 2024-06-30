@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: ssd-pv
+  name: ssd1-pv
 spec:
   capacity:
     storage: 1700Gi
@@ -9,7 +9,7 @@ spec:
     - ReadWriteOnce
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: ssd-storageclass
+  storageClassName: mongo-storageclass
   local:
     path: /mnt/ssd
   nodeAffinity:

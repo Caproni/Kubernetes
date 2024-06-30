@@ -1,9 +1,9 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: ssd-storageclass
+  name: blob-storageclass
 provisioner: kubernetes.io/no-provisioner
 allowVolumeExpansion: true
-volumeBindingMode: WaitForFirstConsumer
+volumeBindingMode: Immediate
 parameters:
   fsType: ext4
