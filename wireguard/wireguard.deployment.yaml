@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wireguard
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wireguard
+  template:
+    metadata:
+      labels:
+        app: wireguard
+    spec:
+      containers:
+      - name: wireguard
+        image: cmulk/wireguard-docker:latest
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN", "SYS_MODULE"]
+        volumeMounts:
+        - name: wireguard-config
+          mountPath: /etc/wireguard
+          readOnly: true
+        ports:
+        - containerPort: 51820/udp
+      volumes:
+      - name: wireguard-config
+        configMap:
+          name: wireguard-config

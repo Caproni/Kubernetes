@@ -1,18 +1,19 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: mongodb-deployment
+  name: mongodb-statefulset
   labels:
-    app: mongodb-deployment
+    app: mongodb-statefulset
 spec:
-  replicas: 1
+  serviceName: "mongodb-service"
+  replicas: 3
   selector:
     matchLabels:
-      app: mongodb-deployment
+      app: mongodb-statefulset
   template:
     metadata:
       labels:
-        app: mongodb-deployment
+        app: mongodb-statefulset
     spec:
       containers:
       - name: mongodb
@@ -33,7 +34,11 @@ spec:
               secretKeyRef:
                 name: mongodb-secret
                 key: mongo-root-password
-      volumes:
-      - name: mongodb-volume
-        persistentVolumeClaim:
-          claimName: mongodb-pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-volume
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi
