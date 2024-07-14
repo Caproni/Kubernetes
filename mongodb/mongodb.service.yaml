@@ -10,7 +10,7 @@ spec:
     targetPort: 27017
     protocol: TCP
   selector:
-    app: mongodb-deployment
+    app: mongodb-statefulset
   type: ClusterIP
 
 ---
@@ -28,6 +28,6 @@ spec:
     protocol: TCP
     nodePort: 30000
   selector:
-    app: mongodb-deployment
+    app: mongodb-statefulset
   type: NodePort
 
