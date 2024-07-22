@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb-statefulset
+  namespace: mongo
+  labels:
+    app: mongodb-statefulset
+spec:
+  serviceName: "headless"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mongodb-statefulset
+  template:
+    metadata:
+      labels:
+        app: mongodb-statefulset
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - ubuntu1
+                      - ubuntu2
+                      - ubuntu3
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: mongodb-statefulset
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: mongodb
+        image: arm64v8/mongo:4.4.18
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongo-volume-claim
+          mountPath: /mnt/data
+        - name: mongo-keyfile
+          mountPath: /etc/secrets
+          readOnly: true
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: mongo-root-username
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: mongo-root-password
+        command: [ "/bin/sh" ]
+        args:
+        - -c
+        - |
+          mkdir -p /tmp
+          cp /etc/secrets/mongo-keyfile /tmp/mongo-keyfile
+          chmod 400 /tmp/mongo-keyfile
+          exec mongod --replSet rs0 --keyFile /tmp/mongo-keyfile --auth --bind_ip_all
+      volumes:
+      - name: mongo-keyfile
+        secret:
+          secretName: mongo-keyfile-secret
+  volumeClaimTemplates:
+  - metadata:
+      name: mongo-volume-claim
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 100Gi
