@@ -1,0 +1,25 @@
+apiVersion: mongodbcommunity.mongodb.com/v1
+kind: MongoDBCommunity
+metadata:
+  name: mongodb-configuration
+  namespace: mongo
+spec:
+  members: 3
+  version: "4.4.6"
+  type: ReplicaSet
+  security:
+    authentication:
+      modes: ["SCRAM"]
+  users:
+    - name: my-user
+      db: admin
+      passwordSecretRef:
+        name: my-user-password
+      roles:
+        - name: readWrite
+          db: mydatabase
+  statefulSet:
+    spec:
+      selector:
+        matchLabels:
+          opsmanager: "true"
