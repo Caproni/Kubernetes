@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mongodb-backup
+spec:
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mongodb-backup
+            image: bitnami/mongodb:latest
+            command:
+            - /bin/bash
+            - -c
+            - |
+              # Define variables
+              BACKUP_DIR=/mnt/nas_backup/mongodb_backups/$(date +\%Y-\%m-\%d)
+              MONGODB_HOST="your_mongodb_host"
+              MONGODB_PORT="your_mongodb_port"
+              
+              # Mount NAS if necessary
+              if ! mountpoint -q /mnt/nas_backup; then
+                  mount -t nfs your_nas_ip:/path/to/nas /mnt/nas_backup
+              fi
+
+              # Create backup directory
+              mkdir -p $BACKUP_DIR
+
+              # Run mongodump
+              mongodump --host $MONGODB_HOST --port $MONGODB_PORT --username $(echo $MONGO_USERNAME) --password $(echo $MONGO_PASSWORD) --out $BACKUP_DIR
+
+              # Optional: Compress the backup
+              tar -czvf $BACKUP_DIR.tar.gz -C $BACKUP_DIR .
+              rm -rf $BACKUP_DIR
+            env:
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: username
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: password
+            volumeMounts:
+            - name: nas-backup
+              mountPath: /mnt/nas_backup
+          volumes:
+          - name: nas-backup
+            nfs:
+              server: your_nas_ip
+              path: /path/to/nas
+          restartPolicy: OnFailure
