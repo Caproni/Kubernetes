@@ -216,7 +216,6 @@ spec:
           mkdir -p /tmp
           cp /etc/secrets/mongo-keyfile /tmp/mongo-keyfile
           chmod 400 /tmp/mongo-keyfile
-          exec mongod --replSet rs0 --keyFile /tmp/mongo-keyfile --auth --bind_ip_all
           exec mongod --replSet rs0 --keyFile /tmp/mongo-keyfile --auth --bind_ip_all --oplogSize 10240
       volumes:
       - name: mongo-keyfile
