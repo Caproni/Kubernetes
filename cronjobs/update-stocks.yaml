@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob-update-stocks
+  namespace: financial
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: update-stocks-latest
+            image: docker.io/caproni60/financial:update-stocks-latest
+            imagePullPolicy: Always
+            envFrom:
+              - configMapRef:
+                  name: financial-config
+          restartPolicy: Never

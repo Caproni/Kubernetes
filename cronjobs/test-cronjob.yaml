@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob-test-cronjob
+  namespace: financial
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: test-cronjob-latest
+            image: docker.io/caproni60/financial:test-cronjob-latest
+            imagePullPolicy: Always
+            envFrom:
+              - configMapRef:
+                  name: financial-config
+          restartPolicy: Never
