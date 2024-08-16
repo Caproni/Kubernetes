@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow
+  namespace: mlflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlflow
+  template:
+    metadata:
+      labels:
+        app: mlflow
+    spec:
+      containers:
+        - name: mlflow
+          image: bitnami/mlflow:latest
+          env:
+            - name: MLFLOW_BACKEND_STORE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mlflow-secret
+                  key: mlflow-backend-store-uri
+            - name: MLFLOW_DEFAULT_ARTIFACT_ROOT
+              value: "s3://mlflow/"
+            - name: MLFLOW_S3_ENDPOINT_URL
+              value: "http://192.168.178.112:9001"
+          ports:
+            - containerPort: 5000
+

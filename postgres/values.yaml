@@ -21,8 +21,8 @@ resources:
     memory: "1Gi"
     cpu: "500m"
   limits:
-    memory: "2Gi"
-    cpu: "1"
+    memory: "4Gi"
+    cpu: "2"
 
 nodeSelector:
   kubernetes.io/hostname: ubuntu1
