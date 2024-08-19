@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob-populate-reference-data
+  namespace: financial
+spec:
+  schedule: "0 12 * * 6"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: populate-reference-data-latest
+            image: docker.io/caproni60/financial:populate-reference-data-latest
+            imagePullPolicy: Always
+            envFrom:
+              - configMapRef:
+                  name: financial-config
+          restartPolicy: Never
