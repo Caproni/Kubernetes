@@ -4,7 +4,7 @@ metadata:
   name: cronjob-update-stocks
   namespace: financial
 spec:
-  schedule: "0 0 * * *"
+  schedule: "0 23 * * *"
   jobTemplate:
     spec:
       template:
