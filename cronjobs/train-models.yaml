@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob-train-models
+  namespace: financial
+spec:
+  schedule: "0 7 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: train-models-latest
+            image: docker.io/caproni60/financial:train-models-latest
+            imagePullPolicy: Always
+            envFrom:
+              - configMapRef:
+                  name: financial-config
+          restartPolicy: Never
