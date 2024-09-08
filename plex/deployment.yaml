@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  labels:
+    app: plex
+  namespace: plex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      containers:
+      - name: plex
+        image: ghcr.io/linuxserver/plex:latest
+        env:
+        - name: PUID
+          value: "972"
+        - name: PGID
+          value: "972"
+        - name: TZ
+          value: "Europe/London"
+        - name: PLEX_CLAIM
+          value: "claim-kZLad-_rxkJuPtUecVCc"
+        ports:
+        - containerPort: 32400
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /config
+          name: plex-config
+        - mountPath: /media
+          name: plex-media
+      volumes:
+      - name: plex-config
+        persistentVolumeClaim:
+          claimName: plex-config-pvc
+      - name: plex-media
+        persistentVolumeClaim:
+          claimName: plex-media-pvc

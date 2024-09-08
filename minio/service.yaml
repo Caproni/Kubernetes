@@ -22,8 +22,8 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 41139
-      targetPort: 41139
+    - port: 44025
+      targetPort: 44025
       nodePort: 32222
   selector:
     app: minio

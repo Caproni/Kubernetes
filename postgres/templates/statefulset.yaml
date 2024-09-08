@@ -75,6 +75,8 @@ spec:
                     operator: In
                     values:
                       - ubuntu1
+                      - ubuntu2
+                      - ubuntu3
   volumeClaimTemplates:
   - metadata:
       name: data

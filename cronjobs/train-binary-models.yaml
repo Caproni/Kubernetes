@@ -1,17 +1,17 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: cronjob-run-models
+  name: cronjob-train-binary-models
   namespace: financial
 spec:
-  schedule: "30 13 * * *"
+  schedule: "0 0 * * 1-5"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: run-models-latest
-            image: docker.io/caproni60/financial:run-models-latest
+          - name: train-binary-models-latest
+            image: docker.io/caproni60/financial:train-binary-models-latest
             imagePullPolicy: Always
             envFrom:
               - configMapRef:

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transmission
+  namespace: plex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transmission
+  template:
+    metadata:
+      labels:
+        app: transmission
+    spec:
+      containers:
+        - name: transmission
+          image: linuxserver/transmission:latest
+          ports:
+            - containerPort: 9091
+              name: web
+            - containerPort: 51413
+              name: peer
+            - containerPort: 51413
+              protocol: UDP
+              name: peer-udp
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: plex-media
+              mountPath: /downloads  # This is where the torrent downloads will be saved
+      volumes:
+        - name: config
+          emptyDir: {}  # This is just for config; adjust as needed
+        - name: plex-media
+          persistentVolumeClaim:
+            claimName: plex-media-pvc  # Reference to your existing PVC
