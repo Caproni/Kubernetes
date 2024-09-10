@@ -15,17 +15,24 @@ spec:
     spec:
       containers:
         - name: mlflow
-          image: bitnami/mlflow:latest
+          image: ghcr.io/mlflow/mlflow:v2.16.0
           env:
             - name: MLFLOW_BACKEND_STORE_URI
               valueFrom:
                 secretKeyRef:
                   name: mlflow-secret
                   key: mlflow-backend-store-uri
-            - name: MLFLOW_DEFAULT_ARTIFACT_ROOT
-              value: "s3://mlflow/"
+            - name: MLFLOW_ARTIFACT_ROOT
+              value: "/mnt/mlflow"
             - name: MLFLOW_S3_ENDPOINT_URL
-              value: "http://192.168.178.112:9001"
+              value: "http://192.168.178.83:9001"
+          volumeMounts:
+            - mountPath: /mnt/mlflow
+              name: mlflow-storage
           ports:
             - containerPort: 5000
+      volumes:
+        - name: mlflow-storage
+          persistentVolumeClaim:
+            claimName: mlflow-pvc
 

@@ -4,7 +4,7 @@ metadata:
   name: cronjob-train-binary-models
   namespace: financial
 spec:
-  schedule: "0 0 * * 1-5"
+  schedule: "0 0 * * 6"
   jobTemplate:
     spec:
       template:
