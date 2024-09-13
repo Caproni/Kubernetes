@@ -10,6 +10,7 @@ spec:
     - name: web
       port: 9091
       targetPort: 9091
+      nodePort: 30133
     - name: peer
       port: 51413
     - name: peer-udp

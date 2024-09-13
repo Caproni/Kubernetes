@@ -33,8 +33,17 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: plex-config
-        - mountPath: /media
+        - mountPath: /movies
           name: plex-media
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - ubuntu1
       volumes:
       - name: plex-config
         persistentVolumeClaim:

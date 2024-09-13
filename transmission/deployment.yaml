@@ -28,7 +28,16 @@ spec:
             - name: config
               mountPath: /config
             - name: plex-media
-              mountPath: /downloads  # This is where the torrent downloads will be saved
+              mountPath: /movies
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                 - key: kubernetes.io/hostname
+                   operator: In
+                   values:
+                     - ubuntu1
       volumes:
         - name: config
           emptyDir: {}  # This is just for config; adjust as needed
