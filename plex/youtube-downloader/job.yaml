@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: youtube-downloader-job
+  namespace: plex
+spec:
+  template:
+    spec:
+      containers:
+      - name: youtube-downloader
+        image: docker.io/caproni60/ytd:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          while read url; do
+            yt-dlp -o "/movies/%(title)s.%(ext)s" "$url";
+          done < /config/youtube-urls.txt
+        volumeMounts:
+        - mountPath: /movies
+          name: plex-media
+        - mountPath: /config
+          name: youtube-urls
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - turing2
+      restartPolicy: Never
+      volumes:
+      - name: plex-media
+        persistentVolumeClaim:
+          claimName: plex-content-pvc
+      - name: youtube-urls
+        configMap:
+          name: youtube-urls

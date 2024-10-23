@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openproject-postgres
+  namespace: openproject
+spec:
+  selector:
+    matchLabels:
+      app: openproject-postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: openproject-postgres
+    spec:
+      initContainers:
+      - name: init-create-subdir
+        image: busybox
+        command: ["sh", "-c", "mkdir -p /var/lib/postgresql/data/pgdata && chown -R 999:999 /var/lib/postgresql/data/pgdata"]
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+      containers:
+      - name: postgres
+        image: postgres:13
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: openproject
+        - name: POSTGRES_USER
+          value: openproject
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        - name: POSTGRES_PASSWORD
+          value: sesame
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-data
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: openproject-postgres-pvc
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openproject
+  namespace: openproject
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openproject
+  template:
+    metadata:
+      labels:
+        app: openproject
+    spec:
+      containers:
+      - name: openproject
+        image: openproject/community:12
+        ports:
+        - containerPort: 80
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://openproject:sesame@192.168.178.117:32699/openproject"
+        - name: SECRET_KEY_BASE
+          value: "sesame"
+        - name: OPENPROJECT_HOST__NAME
+          value: "192.168.178.117"
+        - name: OPENPROJECT_HTTPS
+          value: "false" # Change to "true" if using HTTPS

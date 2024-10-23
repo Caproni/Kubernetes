@@ -43,11 +43,11 @@ spec:
                 - key: kubernetes.io/hostname
                   operator: In
                   values:
-                    - ubuntu1
+                    - turing4
       volumes:
       - name: plex-config
         persistentVolumeClaim:
-          claimName: plex-config-pvc
+          claimName: plex-configuration-pvc
       - name: plex-media
         persistentVolumeClaim:
-          claimName: plex-media-pvc
+          claimName: plex-content-pvc

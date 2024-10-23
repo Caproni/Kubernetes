@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: copy-files-pod
+  namespace: plex
+spec:
+  containers:
+  - name: file-copy
+    image: busybox
+    command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
+    volumeMounts:
+    - name: source-pvc
+      mountPath: /mnt/source
+    - name: dest-pvc
+      mountPath: /mnt/dest
+  volumes:
+  - name: source-pvc
+    persistentVolumeClaim:
+      claimName: plex-media-pvc
+  - name: dest-pvc
+    persistentVolumeClaim:
+      claimName: plex-content-pvc
+  restartPolicy: Never

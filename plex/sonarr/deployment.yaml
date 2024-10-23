@@ -1,31 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: radarr
+  name: sonarr
   namespace: plex
   labels:
-    app: radarr
+    app: sonarr
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: radarr
+      app: sonarr
   template:
     metadata:
       labels:
-        app: radarr
+        app: sonarr
     spec:
       containers:
-        - name: radarr
-          image: lscr.io/linuxserver/radarr:latest
+        - name: sonarr
+          image: lscr.io/linuxserver/sonarr:latest
           ports:
-            - containerPort: 7878
+            - containerPort: 8989
               name: web
           volumeMounts:
             - name: config
               mountPath: /config
+            - name: downloads
+              mountPath: /downloads
             - name: media
-              mountPath: /movies
+              mountPath: /tv
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -34,11 +36,14 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - ubuntu1
+                      - turing4
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: radarr-config-pvc
+            claimName: sonarr-configuration-pvc
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: torrent-downloads-pvc
         - name: media
           persistentVolumeClaim:
-            claimName: plex-media-pvc
+            claimName: plex-content-pvc

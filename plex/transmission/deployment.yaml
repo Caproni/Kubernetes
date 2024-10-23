@@ -37,10 +37,10 @@ spec:
                  - key: kubernetes.io/hostname
                    operator: In
                    values:
-                     - ubuntu1
+                     - turing4
       volumes:
         - name: config
-          emptyDir: {}  # This is just for config; adjust as needed
+          emptyDir: {}
         - name: plex-media
           persistentVolumeClaim:
-            claimName: plex-media-pvc  # Reference to your existing PVC
+            claimName: plex-content-pvc
