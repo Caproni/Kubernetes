@@ -17,3 +17,15 @@ spec:
               - configMapRef:
                   name: financial-config
           restartPolicy: Never
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: kubernetes.io/hostname
+                        operator: In
+                        values:
+                          - turing1
+                          - turing2
+                          - turing3
+                          - turing4
