@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jackett
+  namespace: plex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jackett
+  template:
+    metadata:
+      labels:
+        app: jackett
+    spec:
+      containers:
+        - name: jackett
+          image: linuxserver/jackett:latest
+          ports:
+            - containerPort: 9117
+              name: web
+          volumeMounts:
+            - mountPath: /config
+              name: jackett-config
+      volumes:
+        - name: jackett-config
+          persistentVolumeClaim:
+            claimName: jackett-configuration-pvc

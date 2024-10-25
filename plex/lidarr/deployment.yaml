@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sonarr
+  name: lidarr
   namespace: plex
   labels:
-    app: sonarr
+    app: lidarr
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sonarr
+      app: lidarr
   template:
     metadata:
       labels:
-        app: sonarr
+        app: lidarr
     spec:
       containers:
-        - name: sonarr
-          image: lscr.io/linuxserver/sonarr:latest
+        - name: lidarr
+          image: lscr.io/linuxserver/lidarr:latest
           ports:
-            - containerPort: 8989
+            - containerPort: 8686
               name: web
           volumeMounts:
             - name: config
@@ -38,7 +38,7 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: sonarr-configuration-pvc
+            claimName: lidarr-configuration-pvc
         - name: media
           persistentVolumeClaim:
             claimName: plex-content-pvc
