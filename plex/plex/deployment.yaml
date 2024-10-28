@@ -27,6 +27,8 @@ spec:
           value: "Europe/London"
         - name: PLEX_CLAIM
           value: "claim-kZLad-_rxkJuPtUecVCc"
+        - name: VERSION
+          value: public
         ports:
         - containerPort: 32400
           protocol: TCP

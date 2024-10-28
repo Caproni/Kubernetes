@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prosody-config
+  namespace: jitsi
+data:
+  prosody.cfg.lua: |
+    -- Your Prosody configuration here

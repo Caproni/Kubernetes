@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prosody
+  namespace: jitsi
+spec:
+  serviceName: "prosody"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prosody
+  template:
+    metadata:
+      labels:
+        app: prosody
+    spec:
+      containers:
+      - name: prosody
+        image: jitsi/prosody:latest
+        ports:
+        - containerPort: 5222
+          name: xmpp
+        - containerPort: 5280
+          name: bosh

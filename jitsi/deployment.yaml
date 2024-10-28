@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jicofo
+  namespace: jitsi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jicofo
+  template:
+    metadata:
+      labels:
+        app: jicofo
+    spec:
+      containers:
+      - name: jicofo
+        image: jitsi/jicofo:latest
+        env:
+        - name: JICOFO_AUTH_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: jitsi-secrets
+              key: JICOFO_AUTH_PASSWORD
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jvb
+  namespace: jitsi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jvb
+  template:
+    metadata:
+      labels:
+        app: jvb
+    spec:
+      containers:
+      - name: jvb
+        image: jitsi/jvb:latest
+        env:
+        - name: JVB_AUTH_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: jitsi-secrets
+              key: JVB_AUTH_PASSWORD
+        ports:
+        - containerPort: 10000
+          protocol: UDP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: jitsi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: jitsi/web:latest
+        env:
+        - name: PUBLIC_URL
+          value: "https://your-domain.com"
+        ports:
+        - containerPort: 80
