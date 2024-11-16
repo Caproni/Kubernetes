@@ -7,7 +7,11 @@ spec:
   schedule: "*/5 * * * *"
   jobTemplate:
     spec:
+      backoffLimit: 0
       template:
+        metadata:
+          labels:
+            cronjob-name: cronjob-test-cronjob
         spec:
           containers:
           - name: test-cronjob-latest

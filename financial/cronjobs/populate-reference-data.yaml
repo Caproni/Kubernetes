@@ -5,8 +5,14 @@ metadata:
   namespace: financial
 spec:
   schedule: "0 12 * * 6"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            cronjob-name: cronjob-populate-reference-data
       template:
         spec:
           containers:

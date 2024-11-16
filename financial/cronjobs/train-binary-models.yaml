@@ -4,10 +4,15 @@ metadata:
   name: cronjob-train-binary-models
   namespace: financial
 spec:
-  schedule: "0 0 * * 6"
+  schedule: "0 0 * * 0"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      backoffLimit: 0
       template:
+        metadata:
+          labels:
+            cronjob-name: cronjob-train-binary-models
         spec:
           containers:
           - name: train-binary-models-latest
@@ -16,6 +21,9 @@ spec:
             envFrom:
               - configMapRef:
                   name: financial-config
+            volumeMounts:
+              - mountPath: /code/staging
+                name: financial-models
           restartPolicy: Never
           affinity:
             nodeAffinity:
@@ -25,7 +33,9 @@ spec:
                       - key: kubernetes.io/hostname
                         operator: In
                         values:
-                          - turing1
                           - turing2
                           - turing3
-                          - turing4
+          volumes:
+            - name: financial-models
+              persistentVolumeClaim:
+                claimName: financial-models-pvc

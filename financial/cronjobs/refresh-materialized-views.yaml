@@ -5,8 +5,14 @@ metadata:
   namespace: financial
 spec:
   schedule: "0 9 * * *"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            cronjob-name: cronjob-refresh-materialized-views
       template:
         spec:
           containers:

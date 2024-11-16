@@ -4,10 +4,15 @@ metadata:
   name: cronjob-update-stock-database
   namespace: financial
 spec:
-  schedule: "0 22 * * 1-5"
+  schedule: "0 6 * * 1-5"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      backoffLimit: 0
       template:
+        metadata:
+          labels:
+            cronjob-name: cronjob-update-stock-database
         spec:
           containers:
           - name: update-stock-database-latest
@@ -25,7 +30,5 @@ spec:
                       - key: kubernetes.io/hostname
                         operator: In
                         values:
-                          - turing1
                           - turing2
                           - turing3
-                          - turing4
