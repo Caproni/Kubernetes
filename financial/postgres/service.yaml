@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: financial-postgres
+  namespace: financial
+  labels:
+    app: financial-postgres
+spec:
+  type: NodePort
+  ports:
+  - port: 5432
+    targetPort: 5432
+    nodePort: 30001
+    protocol: TCP
+  selector:
+    app: financial-postgres
+

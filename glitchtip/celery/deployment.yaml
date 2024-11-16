@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glitchtip-celery
+  namespace: glitchtip
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: glitchtip-celery
+  template:
+    metadata:
+      labels:
+        app: glitchtip-celery
+    spec:
+      containers:
+      - name: celery-worker
+        image: glitchtip/glitchtip:latest
+        command: ["celery"]
+        args: ["-A", "glitchtip", "worker", "--loglevel=info"]
+        env:
+        - name: REDIS_URL
+          value: "redis://192.168.178.116:31788"

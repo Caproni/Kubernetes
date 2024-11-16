@@ -1,5 +1,11 @@
 replicaCount: 1
 
+replication:
+  enabled: true
+  user: replicator
+  password: repl1cator
+  primaryHost: my-postgres-primary
+
 image:
   repository: postgres
   tag: "14"
@@ -18,14 +24,15 @@ persistence:
 
 resources:
   requests:
-    memory: "1Gi"
-    cpu: "500m"
+    memory: "2Gi"
+    cpu: "1000m"
   limits:
-    memory: "4Gi"
-    cpu: "2"
+    memory: "12Gi"
+    cpu: "4000m"
 
 nodeSelector:
-  kubernetes.io/hostname: ubuntu1
-  kubernetes.io/hostname: ubuntu2
-  kubernetes.io/hostname: ubuntu3
+  kubernetes.io/hostname: turing1
+  kubernetes.io/hostname: turing2
+  kubernetes.io/hostname: turing3
+  kubernetes.io/hostname: turing4
 

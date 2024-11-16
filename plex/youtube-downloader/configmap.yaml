@@ -5,12 +5,5 @@ metadata:
   namespace: plex
 data:
   youtube-urls.txt: |
-    https://www.youtube.com/watch?app=desktop&v=zX7--0Q33gE
-    https://www.youtube.com/watch?v=hWol_qOjTKw
-    https://www.youtube.com/watch?v=w1-c6O_xAK0
-    https://www.youtube.com/watch?v=5YMAqqCYe00
-    https://www.youtube.com/watch?v=n1L2CnQjX_4
-    https://www.youtube.com/watch?v=OyQfN2FNTb4
-    https://www.youtube.com/watch?v=d0LVCNMAH6E
-    https://www.youtube.com/watch?v=W9cwWq33tgg
+    https://www.youtube.com/watch?v=sAWo_DcRCvA
 
