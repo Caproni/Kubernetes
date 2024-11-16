@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: glitchtip-celery
-  namespace: glitchtip
+  name: celery
+  namespace: celery
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: glitchtip-celery
+      app: celery
   template:
     metadata:
       labels:
-        app: glitchtip-celery
+        app: celery
     spec:
       containers:
       - name: celery-worker
-        image: glitchtip/glitchtip:latest
+        image: python:3.11-slim
         command: ["celery"]
         args: ["-A", "glitchtip", "worker", "--loglevel=info"]
         env:
