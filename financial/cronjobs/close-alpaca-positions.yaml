@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob-close-alpaca-positions
+  namespace: financial
+spec:
+  schedule: "0 16 * * 1-5"
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            cronjob-name: cronjob-close-alpaca-positions
+        spec:
+          containers:
+          - name: close-alpaca-positions
+            image: docker.io/caproni60/financial:close-alpaca-positions-latest
+            imagePullPolicy: Always
+            envFrom:
+              - configMapRef:
+                  name: financial-config
+          restartPolicy: Never
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: kubernetes.io/hostname
+                        operator: In
+                        values:
+                          - turing1
+                          - turing2
+                          - turing3
+                          - turing4
